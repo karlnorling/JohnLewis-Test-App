@@ -20,6 +20,12 @@ I focused mainly to get the application running and presenting results to the us
 I've choosen to forgo of using Redux or React Context, this is primarly due to the simplicty of the app. But also there's a lot of different patterns out there: Saga, Ducks, and Immutable. There's also the React Context vs. Redux to take into considiration.
 
 ## Instructions
+Security first - please create your `.env.local` file with the JohnLewis API key in it.
+Example:
+```
+API_KEY=$G#T%YHGDSTEA$gresg
+```
+
 To run application:
 
 ```bash

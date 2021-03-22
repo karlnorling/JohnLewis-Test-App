@@ -7,9 +7,9 @@ class Page extends React.Component<{}, {}> {
       <div className="Grid">
         <nav>
           <ol>
-            <li><Link to="/dishwasher/20">View Dishwashers</Link></li>
-            <li> <Link to="/hob/20">View Hobs</Link></li>
-            <li><Link to="/bed/20">View Beds</Link></li>
+            <li><Link to="/browse/dishwasher/20">View Dishwashers</Link></li>
+            <li> <Link to="/browse/hob/20">View Hobs</Link></li>
+            <li><Link to="/browse/bed/20">View Beds</Link></li>
           </ol>
         </nav>
       </div>

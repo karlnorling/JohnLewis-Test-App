@@ -12,6 +12,7 @@ export namespace JohnLewis {
     price: Price;
     image: string;
     media?: Media;
+    defaultCategory: DefaultCategory;
     additionalServices?: string[];
     displaySpecialOffer?: string;
     promoMessages?: PromoMessages;
@@ -56,6 +57,11 @@ export namespace JohnLewis {
     selectedDept?: string;
     multiCatSelected?: boolean;
     endecaCanonical?: string;
+  }
+
+  interface DefaultCategory {
+    name: string;
+    id: number;
   }
 
   interface Now {

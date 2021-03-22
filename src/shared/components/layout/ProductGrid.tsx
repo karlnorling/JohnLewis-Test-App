@@ -36,30 +36,38 @@ interface State {
 }
 
 const Products = styled.ol`
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  margin: 0;
-  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   font-size: 14px;
-
   a {
     text-decoration: none;
     color: #333;
   }
+  margin: 0;
+  padding: 0;
 `;
 
 const Product = styled.li`
   background: #fff;
-  width: 25%;
+  width: 100%;
   padding: 20px;
   margin: 0;
-  border-top: 1px solid #ccc;
-  border-right: 1px solid #ccc;
+  border: 1px solid #ccc;
+  border-top: none;
+  border-right: none;
   box-sizing: border-box;
   list-style: none;
-  &:nth-of-type(4n) {
-    border-right: none;
+  &:nth-child(1),
+  &:nth-child(2),
+  &:nth-child(3),
+  &:nth-child(4) {
+    border-top: 1px solid #ccc;
+  }
+  &:nth-child(4n) {
+    border-right: 1px solid #ccc;
+  }
+  &:last-child {
+    border-right: 1px solid #ccc;
   }
 `;
 

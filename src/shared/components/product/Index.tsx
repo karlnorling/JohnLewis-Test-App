@@ -5,35 +5,7 @@ import { Loading } from '../util/Loading';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
 import { Link } from 'react-router-dom';
-
-interface MatchParams {
-  id: string;
-}
-
-interface Match<P> {
-  params: P;
-  isExact: boolean;
-  path: string;
-  url: string;
-}
-
-interface RouteComponentProps<P> {
-  match: Match<P>;
-  location: Location;
-  history: History;
-  staticContext?: any;
-}
-
-interface Props extends RouteComponentProps<MatchParams> {}
-
-interface State {
-  id: string;
-  product?: JohnLewis.Product;
-  hasProduct: boolean;
-  isLoading: boolean;
-  hasError: boolean;
-  errorMessage: string;
-}
+import { useQuery } from 'react-query'
 
 const ProductWrapper = styled.section`
   margin: 0;
@@ -81,14 +53,6 @@ const SlideImage = styled.img`
 const CarouselWrapper = styled(Carousel)`
   flex: 0 0 40%;
 `;
-
-const carouselSettings = {
-  showThumbs: false,
-  infiniteLoop: false,
-  showStatus: false,
-  showIndicators: false,
-  showArrows: true
-};
 
 const ProductInformation = styled.ul`
   list-style: none;
@@ -177,101 +141,82 @@ const AttributeDesc = styled.dd`
   font-weight: 100;
 `;
 
-export class Product extends React.Component<Props, State> {
-  state: State = {
-    id: '',
-    hasProduct: false,
-    isLoading: true,
-    hasError: false,
-    errorMessage: ''
-  };
-  
-  private fetchProduct = async (id: string) => {
-    const response = await fetch(`/api/product/${id}`)
-      .then(async (response: Response) => {
-      if (!response.ok) {
-        console.error(response.statusText);
-        this.setState({
-          isLoading: false,
-          hasError: true,
-          errorMessage: response.statusText
-        });
-      }
-      return response.json().then((data) => data as JohnLewis.Product);
-    });
-    console.log(response);
-    this.setState({
-      id,
-      product: response,
-      hasProduct: true,
-      isLoading: false,
-      hasError: false
+const carouselSettings = {
+  showThumbs: false,
+  infiniteLoop: false,
+  showStatus: false,
+  showIndicators: false,
+  showArrows: true
+};
+
+const getSlides = (product: JohnLewis.Product): JSX.Element[] | void => {
+  if (product && product.media && product.media.images && product.media.images.urls) {
+    const altText = product.media.images.altText;
+    return product.media.images.urls.map((url: string, index: number) => {
+      return (<SlideImage key={index} src={`https:${url})`} alt={altText} />);
     });
   }
+}
 
-  private getSlides = (product: JohnLewis.Product): JSX.Element[] | void => {
-    if (product && product.media && product.media.images && product.media.images.urls) {
-      const altText = product.media.images.altText;
-      return product.media.images.urls.map((url: string) => {
-        return (<SlideImage key={url} src={`https:${url})`} alt={altText} />);
+const getProductSpecifications = (details: JohnLewis.Details | void): JSX.Element[] | JSX.Element => {
+  if (details && details.features) {
+    return details.features.map((feature: JohnLewis.Feature, i: number) => {
+      const attributes = feature.attributes.map((attribute: JohnLewis.Attribute, j: number) => {
+        return (<Attribute key={j}>
+            <AttributeTitle>{attribute.name}</AttributeTitle>
+            <AttributeDesc>{attribute.value}</AttributeDesc>
+          </Attribute>);
       });
-    }
+      const featureElement = (feature.groupName && feature.groupName !== '') ? (<Feature><h4>feature.groupName</h4><Attribute>{attributes}</Attribute></Feature>) : (<Feature>{attributes}</Feature>);
+      return (<Features key={i}>{featureElement}</Features>);
+    });
+  }
+  return (<Features>No features</Features>);
+}
+
+const fetchProductData = async (id: number) => {
+  const result = await fetch(`/api/product/${id}`);
+  return result.json();
+}
+
+export const Product = ({ match }) => {
+  const { params: { id } } = match;
+  const { isLoading, error, data: product } = useQuery(['productData', id], () => fetchProductData(id));
+
+  if (error) {
+    return (<div>{error}</div>);
   }
 
-  private getProductSpecifications = (details: JohnLewis.Details | void): JSX.Element[] | JSX.Element => {
-    if (details && details.features) {
-      return details.features.map((feature: JohnLewis.Feature, i: number) => {
-        const attributes = feature.attributes.map((attribute: JohnLewis.Attribute, j: number) => {
-          return (<Attribute key={j}>
-              <AttributeTitle>{attribute.name}</AttributeTitle>
-              <AttributeDesc>{attribute.value}</AttributeDesc>
-            </Attribute>);
-        });
-        const featureElement = (feature.groupName && feature.groupName !== '') ? (<Feature><h4>feature.groupName</h4><Attribute>{attributes}</Attribute></Feature>) : (<Feature>{attributes}</Feature>);
-        return (<Features key={i}>{featureElement}</Features>);
-      });
-    }
-    return (<Features>No features</Features>);
+  if (isLoading) {
+    return (<Loading />);
   }
 
-  public componentDidMount() {
-    const { params } = this.props.match;
-    this.fetchProduct(params.id);
+  if (product) {
+    const { details, code, title, defaultCategory } = product;
+    const { productInformation } = details;
+    const slides = getSlides(product);
+    const specifications = getProductSpecifications(details);
+    const carousel = slides ? <CarouselWrapper {...carouselSettings}>{slides}</CarouselWrapper> : null;
+    return(
+      <ProductWrapper>
+        <PageTitle>
+          <BackArrow to={`/browse/${defaultCategory.name.toLowerCase()}/20`}>{' '}</BackArrow>
+          {title}
+        </PageTitle>
+        {carousel}
+        <ProductInformation>
+          <ProductInformationItem>
+            <ProductInformationTitle>Product information</ProductInformationTitle>
+            <Code>Product code: {code}</Code>
+            <ProductDescription dangerouslySetInnerHTML={{__html: productInformation}} />
+          </ProductInformationItem>
+          <ProductInformationItem>
+            <ProductInformationTitle>Product Specification</ProductInformationTitle>
+            {specifications}
+          </ProductInformationItem>
+        </ProductInformation>
+      </ProductWrapper>);
   }
 
-  public render() {
-    if (this.state.hasError) {
-      return (<div>{this.state.errorMessage}</div>);
-    }
-
-    if (this.state.isLoading) {
-      return (<Loading>Loading Product</Loading>);
-    }
-
-    if (this.state.hasProduct && this.state.product) {
-      const { product } = this.state;
-      const slides = this.getSlides(product);
-      const details = product.details ? product.details.productInformation : '';
-      const specifications = this.getProductSpecifications(product.details);
-      const carousel = slides ? <CarouselWrapper {...carouselSettings}>{slides}</CarouselWrapper> : null;
-      return(
-        <ProductWrapper>
-          <PageTitle><BackArrow to={`/browse/${product.defaultCategory.name.toLowerCase()}/20`}>&nbsp;</BackArrow>{product.title}</PageTitle>
-          {carousel}
-          <ProductInformation>
-            <ProductInformationItem>
-              <ProductInformationTitle>Product information</ProductInformationTitle>
-              <Code>Product code: {product.code}</Code>
-              <ProductDescription dangerouslySetInnerHTML={{__html: details}} />
-            </ProductInformationItem>
-            <ProductInformationItem>
-              <ProductInformationTitle>Product Specification</ProductInformationTitle>
-              {specifications}
-            </ProductInformationItem>
-          </ProductInformation>
-        </ProductWrapper>);
-    }
-
-    return (<div>Something went wrong</div>);
-  }
+  return null;
 }

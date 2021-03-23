@@ -19,35 +19,6 @@ const ProductWrapper = styled.section`
   flex-wrap: wrap;
 `;
 
-const PageTitle = styled.h1`
-  font-weight: 100;
-  width: 100%;
-  margin: 0;
-  padding: 20px 0;
-  text-align: center;
-  text-transform: capitalize;
-  color: #999;
-  font-size: 26px;
-  background: #f9f9f9;
-  border-bottom: 1px solid #ccc;
-  flex: 0 0 100%;
-`;
-
-const BackArrow = styled(Link)`
-  color: #999;
-  float: left;
-  position: relative;
-  left: 150px;
-  top: 10px;
-  font-weight: 100;
-  text-decoration: none;
-  border-top: 2px solid #777;
-  border-left: 2px solid #777;
-  width: 20px;
-  height: 20px;
-  transform: rotate(-45deg);
-`;
-
 const SlideImage = styled.img`
   padding: 0 0 40px 0;
   background: #fff;
@@ -202,11 +173,7 @@ export const Product = ({ match }) => {
     const carousel = slides ? <CarouselWrapper {...carouselSettings}>{slides}</CarouselWrapper> : null;
     return(
       <ProductWrapper>
-        <Crumbs items={crumbs} size={SIZE} />
-        <PageTitle>
-          <BackArrow to={`/browse/${defaultCategory.name.toLowerCase()}/${SIZE}`}>{' '}</BackArrow>
-          {title}
-        </PageTitle>
+        <Crumbs items={crumbs} size={SIZE} title={title} />
         {carousel}
         <ProductInformation>
           <ProductInformationItem>

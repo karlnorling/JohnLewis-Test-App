@@ -6,6 +6,9 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
 import { Link } from 'react-router-dom';
 import { useQuery } from 'react-query'
+import { Crumbs } from './crumbs';
+
+const SIZE = 20;
 
 const ProductWrapper = styled.section`
   margin: 0;
@@ -192,15 +195,16 @@ export const Product = ({ match }) => {
   }
 
   if (product) {
-    const { details, code, title, defaultCategory } = product;
+    const { details, code, title, defaultCategory, crumbs } = product;
     const { productInformation } = details;
     const slides = getSlides(product);
     const specifications = getProductSpecifications(details);
     const carousel = slides ? <CarouselWrapper {...carouselSettings}>{slides}</CarouselWrapper> : null;
     return(
       <ProductWrapper>
+        <Crumbs items={crumbs} size={SIZE} />
         <PageTitle>
-          <BackArrow to={`/browse/${defaultCategory.name.toLowerCase()}/20`}>{' '}</BackArrow>
+          <BackArrow to={`/browse/${defaultCategory.name.toLowerCase()}/${SIZE}`}>{' '}</BackArrow>
           {title}
         </PageTitle>
         {carousel}

@@ -8,17 +8,12 @@ My approach was to create an application that can be run that communicates with 
 
 I've chosen a number of 3rd party libraries for this.
   - React
-    - Query
+    - React-Query
   - Express
   - Razzle
   - Styled Components
 
 A complete list of 3rd party libraries can of course be found in the package.json file.
-
-There are a number of 3rd party TypeScript linting issues I haven't got around to fixing.
-I focused mainly to get the application running and presenting results to the user.
-
-I've chosen to forgo of using Redux or React Context, this is primarily due to the simplicity of the app. But also there's a lot of different patterns out there: Saga, Ducks, and Immutable. There's also the React Context vs. Redux to take into consideration.
 
 ## Instructions
 Security first - please create your `.env.local` file with the JohnLewis API key in it.

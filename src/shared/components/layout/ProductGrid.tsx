@@ -35,10 +35,7 @@ const Product = styled.li`
     border-top: 1px solid #ccc;
   }
   &:nth-child(4n) {
-    border-right: 1px solid #ccc;
-  }
-  &:last-child {
-    border-right: 1px solid #ccc;
+    border-right: none;
   }
 `;
 

@@ -34,11 +34,11 @@ const NavItems = styled.ol`
 const NavItem = styled.li`
   margin: 0 15px 0 0;
   padding: 0;
-  font-size: 22px;
+  font-size: 20px;
 
   a {
     text-decoration: none;
-    color: #555;
+    color: #999;
 
     &:visited,
     &:active {

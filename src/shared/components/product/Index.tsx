@@ -154,7 +154,7 @@ const fetchProductData = async (id: number) => {
 }
 
 export const Product = ({ match }) => {
-  const { params: { id } } = match;
+  const { params: { id, page } } = match;
   const { isLoading, error, data: product } = useQuery(['productData', id], () => fetchProductData(id));
 
   if (error) {
@@ -166,14 +166,14 @@ export const Product = ({ match }) => {
   }
 
   if (product) {
-    const { details, code, title, defaultCategory, crumbs } = product;
+    const { details, code, title, crumbs } = product;
     const { productInformation } = details;
     const slides = getSlides(product);
     const specifications = getProductSpecifications(details);
     const carousel = slides ? <CarouselWrapper {...carouselSettings}>{slides}</CarouselWrapper> : null;
     return(
       <ProductWrapper>
-        <Crumbs items={crumbs} size={SIZE} title={title} />
+        <Crumbs items={crumbs} page={page} size={SIZE} title={title} />
         {carousel}
         <ProductInformation>
           <ProductInformationItem>

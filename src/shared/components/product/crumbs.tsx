@@ -13,6 +13,7 @@ interface CrumbsProps {
   items: Item[];
   size: number;
   title: string;
+  page: number;
 }
 
 const NavWrapper = styled.nav`
@@ -68,9 +69,9 @@ const NavItem = styled.li`
   }
 `;
 
-export const Crumbs = ({ items, size, title }: CrumbsProps) => {
+export const Crumbs = ({ items, size, page, title }: CrumbsProps) => {
   const navigationItems = items.map((item: Item, index: number) => {
-    return <NavItem key={index}><Link to={`/browse/${item.displayName.toLowerCase()}/${size}`}>{item.displayName}</Link></NavItem>;
+    return <NavItem key={index}><Link to={`/browse/${item.displayName.toLowerCase()}/${size}/${page}`}>{item.displayName}</Link></NavItem>;
   });
   const current = <NavItem>{title}</NavItem>
   return <NavWrapper><NavItems>{navigationItems}{current}</NavItems></NavWrapper>

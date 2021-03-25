@@ -5,7 +5,6 @@ import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Loading } from '../util/Loading';
 import { Pagination } from '../util/Pagination';
-
 import { useQuery } from 'react-query'
 
 const Products = styled.ol`
@@ -91,13 +90,13 @@ const renderPrice = (price: JohnLewis.Price): JSX.Element => {
   }
 }
 
-const generateProductList = (searchResult: JohnLewis.SearchResult) => {
+const generateProductList = (page:number, searchResult: JohnLewis.SearchResult) => {
   if (searchResult && searchResult.products) {
     return searchResult.products.map((product: JohnLewis.Product) => {
       const price = renderPrice(product.price);
       return (
         <Product key={product.productId}>
-          <Link to={`/product/${product.productId}`}>
+          <Link to={`/product/${page}/${product.productId}`}>
             <ProductImage src={product.image} />
             <Title>{product.brand} {product.title}</Title>
             {price}
@@ -130,7 +129,7 @@ export const ProductGrid = ({ match }) => {
   }
 
   if (data) {
-    const list = generateProductList(data);
+    const list = generateProductList(page, data);
     const title = `${query} (${data.results})`;
     return (
       <Fragment>

@@ -6,7 +6,7 @@
     "start": "egrep -v '^#' .env.local | xargs | razzle start",
     "build": "razzle build",
     "test:dev": "./node_modules/jest/bin/jest.js --watch",
-    "test:report": "./node_modules/jest/bin/jest.js",
+    "test:report": "./node_modules/jest/bin/jest.js --collect-coverage --coverageDirectory=coverage-results",
     "start:prod": "NODE_ENV=production node build/server.js"
   },
   "dependencies": {
@@ -61,14 +61,18 @@
       "./setupTest.js"
     ],
     "transform": {
-      "\\.jsx?$": "babel-jest",
+      "\\.css$": "<rootDir>/node_modules/razzle/config/jest/cssTransform.js",
+      "\\.(css|json)$": "<rootDir>/node_modules/razzle/config/jest/fileTransform.js",
+      "\\.(js|jsx)$": "babel-jest",
       "\\.(ts|tsx)$": "ts-jest"
     },
     "testMatch": [
       "<rootDir>/src/**/?(*.)test.(ts|tsx)"
     ],
     "moduleFileExtensions": [
+      "css",
       "js",
+      "json",
       "jsx",
       "ts",
       "tsx"

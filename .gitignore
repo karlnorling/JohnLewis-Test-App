@@ -12,4 +12,4 @@ build
 .env.test.local
 .env.production.local
 .vscode
-.coverage-results/
+coverage-results/

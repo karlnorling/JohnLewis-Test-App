@@ -20,10 +20,6 @@
     "styled-components": "^5.2.1"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-class-properties": "^7.13.0",
-    "@babel/plugin-proposal-object-rest-spread": "^7.13.8",
-    "@babel/preset-env": "^7.13.12",
-    "@babel/preset-typescript": "^7.13.0",
     "@types/enzyme": "^3.10.8",
     "@types/jest": "^26.0.21",
     "@types/node-fetch": "^2.5.8",
@@ -46,16 +42,6 @@
     "webpack": "^4.44.1",
     "webpack-dev-server": "^3.11.2"
   },
-  "babel": {
-    "presets": [
-      "@babel/preset-env",
-      "@babel/preset-typescript"
-    ],
-    "plugins": [
-      "@babel/plugin-proposal-class-properties",
-      "@babel/plugin-proposal-object-rest-spread"
-    ]
-  },
   "jest": {
     "setupFiles": [
       "./setupTest.js"
@@ -63,7 +49,7 @@
     "transform": {
       "\\.css$": "<rootDir>/node_modules/razzle/config/jest/cssTransform.js",
       "\\.(css|json)$": "<rootDir>/node_modules/razzle/config/jest/fileTransform.js",
-      "\\.(js|jsx)$": "babel-jest",
+      "\\.(js|jsx)$": "<rootDir>/node_modules/razzle/config/jest/babelTransform.js",
       "\\.(ts|tsx)$": "ts-jest"
     },
     "testMatch": [

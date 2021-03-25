@@ -20,9 +20,9 @@ syncLoadAssets();
 const server = express()
   .disable('x-powered-by')
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR!))
-  .get('/api/category/:category/size/:size', async (req: express.Request, res: express.Response) => {
+  .get('/api/category/:category/size/:size/page/:page', async (req: express.Request, res: express.Response) => {
     try {
-      const result = await johnLewisApi.productSearch(req.params.category, req.params.size);
+      const result = await johnLewisApi.productSearch(req.params.category, req.params.size, req.params.page);
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify(result));
     } catch (networkError) {

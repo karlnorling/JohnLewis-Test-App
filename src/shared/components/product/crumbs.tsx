@@ -66,7 +66,7 @@ const NavItem = styled.li`
   &:last-child:after {
     display: none;
   }
-`
+`;
 
 export const Crumbs = ({ items, size, title }: CrumbsProps) => {
   const navigationItems = items.map((item: Item, index: number) => {

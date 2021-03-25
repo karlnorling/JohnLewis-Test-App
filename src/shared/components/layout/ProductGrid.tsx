@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState, Fragment } from 'react';
 import fetch from 'node-fetch';
 import { JohnLewis } from '../../../types/JohnLewis';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Loading } from '../util/Loading';
+import { Pagination } from '../util/Pagination';
+
 import { useQuery } from 'react-query'
 
 const Products = styled.ol`
@@ -54,6 +56,7 @@ const PageTitle = styled.h1`
   text-transform: capitalize;
   color: #999;
   font-size: 20px;
+  border-bottom: 1px solid #ccc;
 `;
 
 const Title = styled.h2`
@@ -106,32 +109,46 @@ const generateProductList = (searchResult: JohnLewis.SearchResult) => {
   return (<div>No results</div>);
 }
 
-const fetchProducts = async (query: string, size: number) => {
-  const result = await fetch(`/api/category/${query}/size/${size}`)
+const fetchProducts = async (query: string, size: number, page: number) => {
+  const result = await fetch(`/api/category/${query}/size/${size}/page/${page}`)
   return result.json()
 }
 
 export const ProductGrid = ({ match }) => {
-  const { params: { query, size } } = match;
-  const { isLoading, error, data } = useQuery(['productGridData', { query, size }], () => fetchProducts(query, size));
+  const [page, setPage] = useState(1);
+  const { params } = match;
+  const { query, size } = params;
+
+  const { isLoading, error, data, isFetching } = useQuery(['productGridData', { query, size, page }], () => fetchProducts(query, size, page), { keepPreviousData : true });
 
   if (error) {
     return (<div>{error}</div>);
   }
 
-  if (isLoading) {
-    return (<Loading />);
+  if (isLoading || isFetching) {
+    return <Loading />;
   }
 
   if (data) {
     const list = generateProductList(data);
     const title = `${query} (${data.results})`;
-    // Pagination vs. infinite scroll
     return (
-        <section>
-          <PageTitle>{title}</PageTitle>
-          <Products>{list}</Products>
-        </section>
+      <Fragment>
+        <PageTitle>{title}</PageTitle>
+        <Pagination
+          currentPage={page}
+          setPage={setPage}
+          pagesAvailable={data.pagesAvailable}
+          query={query}
+          size={size} />
+        <Products>{list}</Products>
+        <Pagination
+          currentPage={page}
+          setPage={setPage}
+          pagesAvailable={data.pagesAvailable}
+          query={query}
+          size={size} />
+      </Fragment>
     );
   }
 

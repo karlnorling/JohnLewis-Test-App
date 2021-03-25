@@ -31,8 +31,8 @@ export class JohnLewisApi {
       });       
   }
 
-  public productSearch(query: string, pageSize: string): Promise<JohnLewis.SearchResult> {
-    const url = `${this.API_URI}/search/api/rest/v2/catalog/products/search/keyword?q=${query}&pageSize=${pageSize}&key=${this.API_KEY}`;
+  public productSearch(query: string, pageSize: string, page: string): Promise<JohnLewis.SearchResult> {
+    const url = `${this.API_URI}/search/api/rest/v2/catalog/products/search/keyword?q=${query}&pageSize=${pageSize}&page=${page}&key=${this.API_KEY}`;
     return this.api<JohnLewis.SearchResult>(url);
   }
 

@@ -1,10 +1,10 @@
 import { Loading } from './Loading';
 import * as React from 'react';
-import renderer from 'react-test-renderer';
+import { shallow } from 'enzyme';
 
 describe('<Loading />', () => {
   test('renders Loading component with loading text', () => {
-    const loading = renderer.create(<Loading />);
+    const loading = shallow(<Loading />);
     expect(loading).toBeDefined();
   });
 });
